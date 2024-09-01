@@ -9,13 +9,8 @@ editor:
 ---
 
 # Working with the dplyr and ggplot2 packages
-<<<<<<< HEAD
-My local repo. 
-Load the required libraries:
-=======
 
-Load the required libraries  :
->>>>>>> b038df2e05ae8742738cb67c768d0d2ec76008b0
+Load the required libraries :
 
 ```{r message = FALSE, warning = FALSE}
 # clear the R environment
@@ -69,8 +64,11 @@ Make same plot but showing a separate regression line per year
 ```
 
 Make a panel plot where with each year is shown as a separate graph
+
 ```{r}
 ```
-We conclude from this that: 
-* there were two important outliers in the dataset that were removed after visual inspection
-* the regression between length and width is abou the same for every year, we safely can use only length as a proxy for the biomass of an individual cockle
+
+We conclude from this that: \* there were two important outliers in the
+dataset that were removed after visual inspection \* the regression
+between length and width is abou the same for every year, we safely can
+use only length as a proxy for the biomass of an individual cockle
