@@ -84,6 +84,24 @@ as a block of code by using the small green arrow at the top right.
 ```{r, message = FALSE, warning = FALSE}
 #| label: fig-histogram
 #| fig-cap: Histogram of 100 random values from a normal distribution with 0 mean and 1 standard deviation
+```
+
+```{r}
+# define a variable A and assign a value 5 to it
+A <- 5
+#same for variable B
+B <- 10
+#calculate the sum of A and B
+C <- A + B
+# print the result
+print(C)
+```
+
+```{r}
+
+
+
+
 
 library(tidyverse)
 # set the seed of the random number generator (gives same result)
@@ -147,9 +165,9 @@ set if you want different aspects as the code itself, the output from
 that code, warnings, etc in the output document.
 
 | Execute option: | Descript                                                                                                                                                                                    |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|-----------------------|------------------------------------------------|
 | eval            | Evaluate the code chunk (if false, just echos the code into the output). echo Include the source code in output                                                                             |
-| output          | Include the results of executing the code in the output (true, false, or asis to indicate that the output is raw markdown and should not have any of Quarto’s standard enclosing markdown). |
+| output          | Include the results of executing the code in the output (true, false, or asis to indicate that the output is raw markdown and should not have any of Quarto's standard enclosing markdown). |
 | warning         | Include warnings in the output.                                                                                                                                                             |
 | error           | Include errors in the output (note that this implies that errors executing code will not halt processing of the document).                                                                  |
 | include         | Catch all for preventing any output (code or results) from being included (e.g. include: false suppresses all output from the code block).                                                  |
