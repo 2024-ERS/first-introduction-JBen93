@@ -1,6 +1,6 @@
 ---
 title: "Working with quarto documents that include R code"
-author: "Han Olff"
+author: "Han Olff_ changed by Joshua Benjamin"
 date: "2024-08-29"
 format: html
 editor: 
