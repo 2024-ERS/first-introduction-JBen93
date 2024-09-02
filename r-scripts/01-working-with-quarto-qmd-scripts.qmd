@@ -96,8 +96,10 @@ mean(my_numbers)
 
 
 ```
+
 #make a figure
-```{r} 
+
+```{r}
 # load the tidyverse package
 library(tidyverse)
 # set the seed of the random number generator (gives same result)
@@ -108,8 +110,6 @@ randomvalue <- rnorm(n = 100, mean = 0, sd = 1)
 
 ```
 
-
-
 ```{r}
 
 library(tidyverse)
@@ -117,12 +117,20 @@ library(tidyverse)
 set.seed(123)
 # generate 100 random values form a normal distribution with mean=0 and standard deviation 1
 randomvalue <- rnorm(n = 100, mean = 0, sd = 1)
+print(randomvalue)
+mean(randomvalue)
+
 # convert to a dataframe
 data1<-data.frame(randomvalue)
-# plot as a histogram
+data1
+# plot as a histogram with axis labels
 ggplot2::ggplot(data=data1, 
                 mapping=aes(x=randomvalue)) +
   geom_histogram()
+
+```
+
+```{r}
 
 ```
 
@@ -174,7 +182,7 @@ set if you want different aspects as the code itself, the output from
 that code, warnings, etc in the output document.
 
 | Execute option: | Descript                                                                                                                                                                                    |
-|-----------------------|------------------------------------------------|
+|------------------------|------------------------------------------------|
 | eval            | Evaluate the code chunk (if false, just echos the code into the output). echo Include the source code in output                                                                             |
 | output          | Include the results of executing the code in the output (true, false, or asis to indicate that the output is raw markdown and should not have any of Quarto's standard enclosing markdown). |
 | warning         | Include warnings in the output.                                                                                                                                                             |
