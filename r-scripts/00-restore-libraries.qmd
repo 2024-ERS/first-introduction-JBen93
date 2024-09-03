@@ -27,3 +27,4 @@ renv::restore() # restore your libraries from the lock file
 ```
 
 Run this code to restore your local library to the same packages and same versions of these that I used when I made this R project.
+
