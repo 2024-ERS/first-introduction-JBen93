@@ -6,6 +6,8 @@ format: html
 editor: 
   markdown: 
     wrap: 72
+    editor_options:
+  chunk_output_type:console
 ---
 
 # Using renv for making R predictable adapted from Han Olff
