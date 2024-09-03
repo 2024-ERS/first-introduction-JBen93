@@ -138,7 +138,7 @@ ggplot2::ggplot(data=data1,
 ```{r}
  #Importing data in R
 
-Data can be imported in different ways in R:\
+#Data can be imported in different ways in R:\
 1. entering data directly in your script\
 2. reading data from a .csv or .xlsx file from your local computer or online source\
 3. reading data from a published csv link in a Google Sheets database\
