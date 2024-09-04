@@ -21,6 +21,7 @@ We will mostly use the last method during this course. When reading data, we pre
 library(tidyverse) # load the tidyverse libraries, including readr
 ```
 
+
 ```{r}
 #| label: enter-data-in-script
 #| warning: false
