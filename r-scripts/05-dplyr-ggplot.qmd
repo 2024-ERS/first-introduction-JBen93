@@ -6,11 +6,18 @@ format: html
 editor: 
   markdown: 
     wrap: 72
+editor_options:
+    chunk_output_type: console
 ---
 
 # Working with the dplyr and ggplot2 packages
 
 Load the required libraries :
+
+```{r}
+#| label: restore-all-package-versions
+renv::restore() # restore your libraries from the lock file
+```
 
 ```{r message = FALSE, warning = FALSE}
 # clear the R environment
@@ -41,31 +48,57 @@ Read the FactCockleSize table with read_csv, which reads it as tibble
 (formatted dataframe)
 
 ```{r}
-FactCockleSize <- readr::read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSpormjGiM4uWMTIZYm9Upt5j1Ige_Wu9CrhGGdvjXwxmHP2R6S7JDyEmiGTn3fXihl5s5yBn_sdo8h/pub?gid=1538766002&single=true&output=csv")
-```
-
-Plot with ggplot the relation between cockle thickness (thickness_mm, as
-x) and length (length_mm), showing each year with a different color, and
-add a regression line through all the years
-
-```{r}
+#There is a big outlier, likely a data entry error, so we remove it
+FactCockleSize <- readr::read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSpormjGiM4uWMTIZYm9Upt5j1Ige_Wu9CrhGGdvjXwxmHP2R6S7JDyEmiGTn3fXihl5s5yBn_sdo8h/pub?gid=1538766002&single=true&output=csv")%>%
+  dplyr::filter(CockleObs_ID!=1531 ,CockleObs_ID!=469) %>%
+  dplyr::mutate(year=factor(year)) #add a year column
+print(FactCockleSize)
 
 ```
 
-Further explore the plot with a regression line through all the data
+#Plot with ggplot the relation between cockle thickness (thickness_mm, as
+#x) and length (length_mm), 
 
 ```{r}
+ggplot2::ggplot(data = FactCockleSize,#which data to use
+                mapping =aes(x=length_mm, y=thickness_mm)) +  #what is on the axes
+  geom_point()  #how to plot 
+#find the other outlier 
+FactCockleSize|>dplyr::filter(thickness_mm>10 & length_mm<5)
+#remove the 469 above
+FactCockleSize <- FactCockleSize |> dplyr::filter(thickness_mm<500)
+```
+#plot the graph with regression line
+```{r}
+ggplot2::ggplot(data = FactCockleSize,# which data to use
+                mapping =aes(x=length_mm, y=thickness_mm)) +  #what is on the axes
+  geom_point()+ #how to plot 
+  geom_smooth(method = "lm")#add a regression line
+
+#color the points by year, but plot one regression line 
+ggplot2::ggplot(data = FactCockleSize,#which data to use
+                mapping =aes(x=length_mm, y=thickness_mm)) +  #what is on the axes
+  geom_point(mapping = aes(color=year)) +  #how to plot 
+  geom_smooth(method = "lm")#add a regression line
 ```
 
 Make same plot but showing a separate regression line per year
 
 ```{r}
-# color the points by year, but plot one regression line
+# make a plot with each year as a separate graph
+FactCockleSize|> # which data to use
+dplyr::filter(year %in% c (2014,2015,2017,2018,2020,2021)) |>#add a year column
+ ggplot2::ggplot(mapping =aes(x=length_mm, y=thickness_mm)) +  #what is on the axes
+  geom_point(mapping = aes(color=year)) +  #how to plot 
+  geom_smooth(method = "lm") + #add a regression line
+facet_wrap(~year) #make a panel plot
+
 ```
 
 Make a panel plot where with each year is shown as a separate graph
 
 ```{r}
+
 ```
 
 We conclude from this that: \* there were two important outliers in the
