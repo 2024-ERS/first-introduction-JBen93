@@ -63,7 +63,7 @@ vdat3 %>% dplyr::filter(rank<=10) %>%
 # and  add  the elevation_m variable to the vdat3 vegetation data of 2017-2020
 elevdat<-read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT4C7olgh28MHskOjCIQGYlY8v5z1sxza9XaCccwITnjoafF_1Ntfyl1g7ngQt4slnQlseWT6Fk3naB/pub?gid=1550309563&single=true&output=csv") %>%
    dplyr::select(year,TransectPoint_ID,elevation_m) %>%
-   dplyr::filter(!is.na(TransectPoint_ID))
+   dplyr::filter(!is.na(TransectPoint_ID)) # remove the rows with NA in TransectPoint_ID
 elevdat
 # join with the vegetation data
 vdat4<- vdat3 %>% dplyr::filter(year>=2017) # make new file with filtered vegetation data only year >= 2017
