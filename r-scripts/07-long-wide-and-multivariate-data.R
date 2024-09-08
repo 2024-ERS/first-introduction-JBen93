@@ -7,8 +7,15 @@
 # clear all data
 remove(list=ls())
 
+# restore and load libraries
+renv::restore()
+library(tidyverse) # including ggplot2, dplyr that we 
+
 # load libraries
 library(tidyverse)
+
+# the libraries available in the R environment
+search()
 
 # read the vegetation data from the google sheet
 vdat<-read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSJFU7gDlXuBM6hgWwcYJ-c_ofNdeqBe50_lDCEWO5Du3K7kPUDRh_esyKuHpoF_GbmBAoT4ZygrGWq/pub?gid=2036214007&single=true&output=csv")
@@ -26,7 +33,7 @@ unique(vdat$year)
 vdat1<-vdat %>%
   tidyr::pivot_longer(-c(year,TransectPoint_ID), # which variables to not include in the wide-long pivot
                       names_to="Species_ID",  # what is the name of species variable
-                      values_to="cover") %>%  # what is the name of abudance variable
+                      values_to="cover") %>%  # what is the name of abundance variable
   dplyr::filter(!Species_ID %in% c("bare","litter","mosses","SalicEur","SalicPro")) # remove the species Salicornia.europaea and Salicornia.procumbens (!)
 
 #show the names of all the species in the dataset

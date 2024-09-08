@@ -6,6 +6,7 @@ rm(list=ls())
 
 # restore and load libraries
 renv::restore()
+
 library(tidyverse) # including ggplot2, dplyr that we 
 
 # load the elevation data and show the first 10 records of the dataset
