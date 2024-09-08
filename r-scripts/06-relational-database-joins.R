@@ -69,8 +69,11 @@ combidat |>
 
 # show this model as a line in ggplot, with the confidence interval
 
+
 # fit a better model, using a loess smoother
+
 # show this model in ggplot
+
 
 ##### plot  how the size (as mean length) of cockles changes with  elevation along the transect
 # omit the observations where length is NA (because no cockles were measures)
