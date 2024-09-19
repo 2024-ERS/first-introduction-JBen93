@@ -8,8 +8,8 @@ install.packages("psych")
 
 renv::restore()
 
-library(vegan) # multivariate analysis of ecological community data 
-library(psych) # usefull for panel plots of multivariate datasets
+library(vegan) 
+library(psych) 
 library(tidyverse)
 
 # read the vegetation data
@@ -165,13 +165,19 @@ ef_dca <- vegan::envfit(dca ~ clay_cm + floodprob + elevation_m + DistGulley_m +
 #add the result to the ordination plot as vectors for each variable
 plot(ef_dca)
 
-##### add contour surfaces to the dca ordination for the relevant abiotic variables
+##### add the contour surfaces to the dca ordination for the relevant abiotic variables
+##maybe just one variable at a time based on the interest
 
 vegan::ordisurf(dca, envdat$clay_cm, add= T, col = "green")
 vegan::ordisurf(dca, envdat$elevation_m, add= T, col = "blue")
 vegan::ordisurf(dca, vegdat$PlantMar, add= T, col = "red")  
 
+# add species contour
+vegan::ordisurf(dca, vegdat$FestuRub, add= T, col = "green")
 ##### make the same plot but using a nmds
+nm_env <- vegan::envfit(nmds_veg ~ clay_cm + floodprob + elevation_m + DistGulley_m + redox5 + redox10, data = envdat, na.rm= T)
+plot(nmds_veg)
+
 ##### fit the environmental factors to the nmds ordination surface
 
 ##### fit the environmental factors to the dca ordination surface
@@ -181,16 +187,34 @@ vegan::ordisurf(dca, vegdat$PlantMar, add= T, col = "red")
 ##### add contour surfaces to the nmds ordination for the relevant abiotic variables
 
 
+
 ##### compare an unconstrainted (DCA) and constrained (CCA) ordination
 # did you miss important environmental factors?
 # show the results of the detrended correspondence analysis
+dca
 
 # the eigenvalues represent the variation explained by each axis
+cca1<-vegan::cca(vegdat~clay_cm + floodprob + elevation_m + DistGulley_m + redox5 + redox10, data = envdat, na.rm= T)
+summary(cca)
 
 # kick out variables that are least significant - simplify the model
-
+#check what is significant and what is not
+anova(cca1, by="axis")
+anova(cca1, by="margin")
+#redo with only important and correlated variables
+cca2<-vegan::cca(vegdat~ floodprob+DistGulley_m,data = envdat)
+summary(cca)
+anova(cca2, by="axis")
+anova(cca2, by="margin")
 
 # add the environmental factors to the cca ordination plot
+vegan::ordiplot(cca2,dispay="sites", cex=1, type = "text",
+                xlab="CCA1 (21%)", ylab="CCA2 (14%)")
+vegan::orditorp(cca2, display="species", priority=SpecTotCov, col="red", pcol="blue", pch="+", cex=1.1)
+vegan::ordisurf(cca2, envdat$floodprob, add=T, col="blue")
+vegan::ordisurf(cca2, envdat$DistGulley_m, add=T, col="green")
+ 
+          
 
 
 # test if the variables and axes (margins) are significant
