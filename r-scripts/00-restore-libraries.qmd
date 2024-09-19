@@ -1,13 +1,13 @@
 ---
 title: "Using the renv library for making R predictable"
-author: "Han Olff- changed by Joshua Benjamin"
+author: "Han Olff"
+format: html
 date: "2024-09-02"
 editor_options: 
   chunk_output_type: console
 ---
 
 # Using renv for making R predictable
-
 
 A major strength, but also potential challenge of R is that the software changes all the time. All functionality of R comes from packages, and these are improved, expanded, updated all the time. Say that you develop a set of scripts in R now, for example to analyse the data in your master project., and you develop a publication from the results. But you get several revisions, and finally complete the paper two years later. By that time, you will have updated your versions of R and your packages several times.This may change the functionality of your scripts, they may not work anymore. And when you publish the paper and deposit the data and scripts in a repository, even 10 years from now you want to be able to replicate your analyses, with the "old" versions of the packages that you used at the time when you did the analysis for the paper.
 
@@ -29,4 +29,3 @@ renv::restore() # restore your libraries from the lock file
 ```
 
 Run this code to restore your local library to the same packages and same versions of these that I used when I made this R project.
-

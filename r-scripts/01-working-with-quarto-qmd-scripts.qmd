@@ -1,14 +1,14 @@
 ---
 title: "Working with quarto documents that include R code"
-author: "Han Olff_ changed by Joshua Benjamin"
+author: "Han Olff"
 date: "2024-08-29"
 format: html
 editor: 
   markdown: 
     wrap: 72
-editor_options:
+editor_options: 
   chunk_output_type: console
-  ---
+---
 
 # Working with Quarto documents in R
 
@@ -83,46 +83,44 @@ indicating in which language it is written, then some execution options
 starting with #\| and then the script itself. This code chunk can be run
 as a block of code by using the small green arrow at the top right.
 
+Make a simple code block
+
 ```{r}
-# define a variable A and assign a value 5 to it
+# define a variable A and assign the value 5 to it
 A <- 5
-#same for variable B
+# same for a variable B
 B <- 10
-#calculate the sum of A and B
+# calculate the sum of A and B and call it C
 C <- A + B
 # print the result
 print(C)
-#caculate the mean of the numbers 1, 3,7,12,46
-my_numbers <- c(1, 3, 7, 12, 46)
-mean(my_numbers)
-
-
+# calculate the mean of the numbers 1, 3, 7, 12,46
+my_numbers<-c(1, 3, 7, 12,46)
+base::mean(my_numbers)  # use function mean from package base
 ```
 
-#make a figure
+The sum of 10 and 5 is 15
 
+Then make a plot
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
+#| label: fig-histogram
+#| fig-cap: Histogram of 100 random values from a normal distribution with 0 mean and 1 standard deviation
 
 library(tidyverse)
 # set the seed of the random number generator (gives same result)
 set.seed(123)
 # generate 100 random values form a normal distribution with mean=0 and standard deviation 1
 randomvalue <- rnorm(n = 100, mean = 0, sd = 1)
-print(randomvalue)
 mean(randomvalue)
-
 # convert to a dataframe
 data1<-data.frame(randomvalue)
-data1
+print(data1)
 # plot as a histogram with axis labels
+
 ggplot2::ggplot(data=data1, 
                 mapping=aes(x=randomvalue)) +
   geom_histogram()
-
-```
-
-```{r}
 
 ```
 
@@ -174,9 +172,9 @@ set if you want different aspects as the code itself, the output from
 that code, warnings, etc in the output document.
 
 | Execute option: | Descript                                                                                                                                                                                    |
-|------------------------|-----------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | eval            | Evaluate the code chunk (if false, just echos the code into the output). echo Include the source code in output                                                                             |
-| output          | Include the results of executing the code in the output (true, false, or asis to indicate that the output is raw markdown and should not have any of Quarto's standard enclosing markdown). |
+| output          | Include the results of executing the code in the output (true, false, or asis to indicate that the output is raw markdown and should not have any of Quarto’s standard enclosing markdown). |
 | warning         | Include warnings in the output.                                                                                                                                                             |
 | error           | Include errors in the output (note that this implies that errors executing code will not halt processing of the document).                                                                  |
 | include         | Catch all for preventing any output (code or results) from being included (e.g. include: false suppresses all output from the code block).                                                  |
