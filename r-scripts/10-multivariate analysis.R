@@ -269,6 +269,7 @@ p2 <- envdat2 |>
 
 p1+p2+patchwork::plot_layout(ncol = 1)
 
+
 # what do you write: 
 # the vegetation types were significantly different in distance to gulley (F3,18=21.36, P<0.001)
 # * P<0.05, ** P<0.01, *** P<0.001
