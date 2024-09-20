@@ -6,7 +6,7 @@ library(tidyverse)  # contains lubridate
 library(tidyquant)  # for calculating moving averages
 
 # database: (remove hashtag)
-# browseURL("https://docs.google.com/spreadsheets/d/1yKedemxKYMiBd8nwzZI5GI06enIZKRUvmbbLJk10uAI/edit?gid=304223944")
+browseURL("https://docs.google.com/spreadsheets/d/1yKedemxKYMiBd8nwzZI5GI06enIZKRUvmbbLJk10uAI/edit?gid=304223944")
 
 # read the daily weather data from the KNMI station Lauwersoog - 1 jan 1991 - 31 sep 2024
 dat<-read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRYSmvT7qFqBPa-XIxFIzIXpZOYlWpY-MqyMVVwh_Q1nN7pzxSGaPKlWRhPfCtomR59bkLuOgaUFRa1/pub?gid=2037414920&single=true&output=csv", show_col_types = FALSE) %>%
@@ -31,12 +31,35 @@ dat_month<-dat %>%
 tail(dat_month,20) # note the definition of the metyear_nov and metyear_dec variables, these months "belong" to the next year
 
 # plot monthly average temperature with 5-year running average
-dat_month %>% ggplot(aes(x=mdate,y=avgtemp_mo_oC)) +
+dat_month|>ggplot(aes(x=mdate,y=avgtemp_mo_oC))+
+  geom_line()+
+  tidyquant::geom_ma(ma_fun=SMA,n=61,colour="red",linetype="solid")+
+coord_x_date(xlim=c("2000-01-01","2024-08-31"))+
+  ggtitle("Monthly average temperature at Lauwersoog"+
+  theme(text=element_text(size=10)))
+
 
 # plot monthly rainfall with 1-year running average
-dat_month %>% ggplot(aes(x=mdate,y=totrain_mo_mm)) +
+dat_month|>ggplot(aes(x=mdate,y=totrain_mo_mm))+ 
+  geom_line()+
+  tidyquant::geom_ma(ma_fun=SMA,n=13,
+                     colour="red",linetype="solid")+
+  coord_x_date(xlim=c("2014-01-01","2024-08-31"))+
+  ggtitle("Monthly total rainfall(mm) at Lauwersoog")+
+  theme(text=element_text(size=12))
 
 # additive time series decomposition of the monthly mean temperatures: what is seasonal and what is a longterm trend?
+monthly_temps<-dat_month|>
+ungroup()|>
+dplyr::filter(year!=2024)|> # remove the incomplete year
+dplyr::select(avgtemp_mo_oC)
+plot(monthly_temps$avgtemp_mo_oC)
+
+monthly_temps_ts<-ts(monthly_temps,start=c(1991,1),frequency=12)
+plot(monthly_temps_ts)
+monthly_temps_decomp<-decompose(monthly_temps_ts)
+plot(monthly_temps_decomp)
+
 
   
 # note the trend component is the same as the 12 month running average from the previous plot
