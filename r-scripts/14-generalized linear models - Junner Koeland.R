@@ -59,14 +59,28 @@ std <- (sd(g))
 hist(g,prob=T)
 curve(dnorm(x,mean=m,sd=std),add=T,col="blue", linewidth = 2, yaxt ="n")
 
+#just as a normal linear model, change to glma later
+m2<-lm(specrich~graztreat, data = dat)
+anova(m2)
 # run the standard linear model as a generalized linear model
-
+m3<-glm(specrich~graztreat,family=gaussian(link="identity"), data = dat)
+anova(m3)
 
 # test with generalized linear model assuming now a poisson distribution of residuals 
+
 # if plant species richness is different between the treatments 
+m4<-glm(specrich~graztreat,family=poisson(link="log"), data = dat)
+anova(m4)
 
+# Which model is better
+AIC(m4,m3)
 
-# plot cover mean species richness
+#not really a normal distribution, but the poisson is better than the gaussian
+
+#plot cover mean species richness accounting for block 
+ggplot(data=dat,aes(x=block,y=specrich,fill=graztreat)) +
+  geom_boxplot()
+ 
 
 
 
@@ -74,31 +88,50 @@ curve(dnorm(x,mean=m,sd=std),add=T,col="blue", linewidth = 2, yaxt ="n")
 # if plant species richness is different between the treatments 
 # and account for block effects in the design, assuming it is a fixed effect
 # first only a model with only block , "reference model"
+m5<-lm(specrich~graztreat+block+graztreat:block, data = dat)
+anova(m5)
 
 
 # test with  linear mixed model (assuming normal error  distribution) 
 # if plant species richness is different between the treatments 
 # and account for block effects in the design, assuming it is a random effect
 # first fit a model with only block
-
+m6<-lmerTest::lmer(specrich~(1|block), data = dat)
+coef(m6)
+anova(m6)
 
 # fixed slopes model, assuming the treatment effect is the same for every block
-
+m7<-lmerTest::lmer(specrich~graztreat+(1|block), data = dat)
+coef(m7)
+summary(m7)
+anova(m7)
 
 # random slopes model, assume the treatment effect is different per block
+m8<-lmerTest::lmer(specrich~graztreat+(graztreat|block), data = dat)
+coef(m8)
+summary(m8)
+anova(m8)
+AIC(m8,m7)
+anova(m8,m7)
+#yes it matters, the deiiference between the treatments is significant
 
 # test with generalized linear mixed model (poisson distribution) 
 # if plant species richness is different between the treatments 
 # and account for block effects in the design, assuming it is a random effect
 # (the correct assumption)
 
+
 # first fit a model with only block
+m9<-lme4::glmer(specrich~(1|block), data = dat,family=poisson(link="log"))
 
 
 # add treatment to the model, assuming fixed slopes (i.e. treatment effect is the same for every block)
+m10<-lme4::glmer(specrich~graztreat+(1|block), data = dat,family=poisson(link="log"))
+anova(m10,m9)
 
 # add treatment to the model, now  assuming random slopes and intercepts (i.e. treatment effect is the different for every block)
-
+m11<-lme4::glmer(specrich~graztreat+(graztreat|block), data = dat,family=poisson(link="log"))
+anova(m11,m10)
 
 # Test if the model with grazing treatment is a better model, by comparing it to the model with block 
 # only, calculation the AIC of each model and testing the difference with a Chi-square test
