@@ -65,14 +65,14 @@ data|>
        y = "Value")
 
 
-
-
 #not correct: just treat block as if it is fixed
 m1<-lm(Value~Treatment+Block+Treatment:Block,data=data)
 anova(m1)
 
 # find the best model describing the effects of treatment and block
 # block is a random effect, treatment is a fixed effect
+
+#using lme4, show a mixed model with fixed slopes (=effect of the treatment within each block) and random intercepts
 model1<-lmerTest::lmer(Value~Treatment+(1|Block),data=data)
 summary(model1)
 coef(model1) #slope of the treatment is the same for every block.
@@ -81,12 +81,17 @@ ggplot(data,aes(x=Treatment,y=Value,color=Block))+
   geom_jitter(width=1.5)+
   geom_line(aes(y=predict(model1)),size=1)
 
-#using lme4, show a mixed model with fixed slopes (=effect of the treatment within each block) and random intercepts
+## plot this model with the data as points using ggplot and predicted values
+model2<-lmerTest::lmer(Value~Treatment+(Treatment|Block),data=data)
+summary(model2)
+coef(model2) #slope of the treatment is the same for every block.
+ggplot(data,aes(x=Treatment,y=Value,color=Block))+
+  geom_point()+
+  geom_jitter(width=1.5)+
+  geom_line(aes(y=predict(model2)),size=1)
 
-
-#using lme4, show a mixed model with random slopes and random intercepts
-
-
+# compare the two models using anova
+anova(model1,model2)
 # note that the effect of treatment is now also shown as a random effect 
 
 # plot this model with the data as points using ggplot and predicted values
