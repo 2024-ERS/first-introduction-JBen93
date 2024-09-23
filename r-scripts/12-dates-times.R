@@ -31,36 +31,102 @@ dat_month<-dat %>%
 tail(dat_month,20) # note the definition of the metyear_nov and metyear_dec variables, these months "belong" to the next year
 
 # plot monthly average temperature with 5-year running average
-dat_month %>% ggplot(aes(x=mdate,y=avgtemp_mo_oC)) +
-  
-  # plot monthly rainfall with 1-year running average
-  dat_month %>% ggplot(aes(x=mdate,y=totrain_mo_mm)) +
-  
-  # additive time series decomposition of the monthly mean temperatures: what is seasonal and what is a longterm trend?
-  
-  
-  # note the trend component is the same as the 12 month running average from the previous plot
-  # adjust the time series for the seasonal component, and plot it
-  
-  
-  # note again that really cold monthly temperatures (after seasonal correction) become rare, especially since since 2010
-  # while really warm months (after seasonal correction) become more common from 1991 -2016, while declining a bit again since
-  # to make the plots and do this in tidyverse style, you may want to explore the timetk package
-  # https://cran.r-project.org/web/packages/timetk/timetk.pdf
-  
-  
-  # average temperature of the coldest month per meteorological year
-  
-  # note that 2010 and 2011 were the last winters with a (on average) sub-zero month, 
-  # potentially relevant for cockle recruitment (crabs stay on mudflats eating spatfall)
-  
-  # Hellmann index (sum of all below-zero daily average temperatures from 1 November of previous year until 31 march)
-  # see https://nl.wikipedia.org/wiki/Koudegetal
-  
-  # 1997 was the last "Elfstedentocht"
-  # 2014 -2024 (our transect study) is characterized by only warm winters
-  
-  # Warmth index
-  library(quantreg)
+dat_month |> ggplot(aes(x=mdate,y=avgtemp_mo_oC)) + 
+  geom_line() +
+  tidyquant::geom_ma(ma_fun = SMA, n = 61, col = "red", linetype = "solid") +
+  coord_x_date(xlim=c("2014-01-01", "2024-08-31")) + # zoom in on these dates
+  ggtitle("Monthly Temperature at Lauwersoog") +
+  theme (text = element_text(size=12))
+
+print(dat_month)
+
+# plot monthly rainfall with 1-year running average
+# the dat_month2 is not yet working
+dat_month2 <- dat_month %>% 
+  dplyr::mutate(rain_SMA_13 = rollapply(totrain_mo_mm, width = 13, FUN = mean, fill = NA, align = "right", na.rm = TRUE))
+
+dat_month |> ggplot(aes(x=mdate,y=totrain_mo_mm)) +
+  geom_line() + 
+  tidyquant::geom_ma(ma_fun = SMA, n = 13, col = "blue", linetype = "solid") +
+  coord_x_date(xlim=c("2014-01-01", "2024-08-31")) + # zoom in on these dates
+  ggtitle("Monthly Rainfall (mm) at Lauwersoog") +
+  theme (text = element_text(size=12))
+
+# additive time series decomposition of the monthly mean temperatures: what is seasonal and what is a longterm trend?
+
+monthly_temps <- dat_month |>
+  ungroup() |>
+  dplyr::filter(year!=2024) |>
+  dplyr::select(avgtemp_mo_oC) 
+
+monthly_temps
+
+plot(monthly_temps$avgtemp_mo_oC)
+monthly_temps_ts <- ts(monthly_temps, frequency = 12, start = c(1992, 1))
+plot(monthly_temps_ts)
+monthly_temps_decomp <- decompose(monthly_temps_ts)
+plot(monthly_temps_decomp)
+
+# note the trend component is the same as the 12 month running average from the previous plot
+# adjust the time series for the seasonal component, and plot it
+
+
+
+# note again that really cold monthly temperatures (after seasonal correction) become rare, especially since since 2010
+# while really warm months (after seasonal correction) become more common from 1991 -2016, while declining a bit again since
+# to make the plots and do this in tidyverse style, you may want to explore the timetk package
+# https://cran.r-project.org/web/packages/timetk/timetk.pdf
+
+
+# average temperature of the coldest month per meteorological year
+
+dat_metyear_dec  <- dat_month |>
+  dplyr::group_by(metyear_dec) |>
+  dplyr::summarize(minmonth = min(avgtemp_mo_oC, na.rm = T)) 
+
+dat_metyear_dec
+
+
+# note that 2010 and 2011 were the last winters with a (on average) sub-zero month, 
+# potentially relevant for cockle recruitment (crabs stay on mudflats eating spatfall)
+
+dat_metyear_dec |>
+  ggplot(aes(x=metyear_dec, y=minmonth)) +
+  geom_line(linewidth = 0.8) + 
+  geom_point(size = 3)
+
+
+# Hellmann index (sum of all below-zero daily average temperatures from 1 November of previous year until 31 march)
+# see https://nl.wikipedia.org/wiki/Koudegetal
+
+dat_Hellman <- dat|>
+  dplyr::filter(month %in% c(11,12,1,2,3), TG<0) |>
+  dplyr::group_by(metyear_nov) |>
+  dplyr::summarize(Hellman = sum(TG, na.rm = T))
+
+tail(dat_Hellman,10)
+
+dat_Hellman |>
+  ggplot(aes(x=metyear_nov, y=Hellman)) +
+  geom_point(size = 3) +
+  geom_line(linewidth = 0.8)
+
+
+# 1997 was the last "Elfstedentocht"
+# 2014 -2024 (our transect study) is characterized by only warm winters
+
+# Warmth index
+library(quantreg)
 # see for calculation https://www.knmi.nl/nederland-nu/klimatologie/lijsten/warmtegetallen
 
+Dat_WarmthIndex <- dat |>
+  dplyr::filter(month %in% c(4:8), TG>18) |>
+  dplyr::group_by(year) |>
+  dplyr::summarize(WarmthIndex = sum(TG, na.rm = T))
+
+Dat_WarmthIndex |>
+  ggplot(aes(x=year, y = WarmthIndex)) +
+  # geom_line(linewidth = 0.8, col = "darkblue") +
+  geom_point(size = 2) + 
+  # geom_smooth(method = lm) +
+  geom_quantile(quantiles = c(0.1, 0.5, 0.9))
