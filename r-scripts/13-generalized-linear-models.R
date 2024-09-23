@@ -56,13 +56,30 @@ head(data)
 
 
 # show in a scatter plot
+data|>
+  ggplot(aes(x=Treatment, y=Value, color=Block)) +
+  geom_jitter(width=0.15) +
+  geom_smooth(method = "lm",fill=NA) +
+  labs(title = "Scatter plot of the data",
+       x = "Treatment",
+       y = "Value")
 
 
+
+
+#not correct: just treat block as if it is fixed
+m1<-lm(Value~Treatment+Block+Treatment:Block,data=data)
+anova(m1)
 
 # find the best model describing the effects of treatment and block
 # block is a random effect, treatment is a fixed effect
-
-
+model1<-lmerTest::lmer(Value~Treatment+(1|Block),data=data)
+summary(model1)
+coef(model1) #slope of the treatment is the same for every block.
+ggplot(data,aes(x=Treatment,y=Value,color=Block))+
+  geom_point()+
+  geom_jitter(width=1.5)+
+  geom_line(aes(y=predict(model1)),size=1)
 
 #using lme4, show a mixed model with fixed slopes (=effect of the treatment within each block) and random intercepts
 
