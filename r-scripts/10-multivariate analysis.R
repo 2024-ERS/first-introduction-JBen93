@@ -11,7 +11,7 @@ library(tidyverse)
 
 # read the vegetation data
 vegdat0<-readr::read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSJFU7gDlXuBM6hgWwcYJ-c_ofNdeqBe50_lDCEWO5Du3K7kPUDRh_esyKuHpoF_GbmBAoT4ZygrGWq/pub?gid=2036214007&single=true&output=csv") |>
-  filter(year==2023 & TransectPoint_ID<=1150) |>     # filter for only the only 2023 data and plots with vegetation
+ dplyr:: filter(year==2023 & TransectPoint_ID<=1150) |>     # filter for only the only 2023 data and plots with vegetation
   dplyr::select(-c(year,bare,litter,mosses,SalicSpp)) |>  # select  only distance_m and the species names as variable to use
   tibble::column_to_rownames(var="TransectPoint_ID") # convert distance_m to the row names of the tibble
 
