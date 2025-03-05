@@ -20,7 +20,7 @@ vegdat<-vegdat0 |> dplyr::select(which(colSums(vegdat0) != 0)) # remove species 
 
 # read the macrotransect elevation data
 elevdat<-readr::read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT4C7olgh28MHskOjCIQGYlY8v5z1sxza9XaCccwITnjoafF_1Ntfyl1g7ngQt4slnQlseWT6Fk3naB/pub?gid=1550309563&single=true&output=csv") %>%
-  dplyr::filter(year==2023 & !is.na(TransectPoint_ID) & TransectPoint_ID<=1150) %>%
+  dplyr::filter(year==2023 & !is.na(TransectPoint_ID) & TransectPoint_ID<=1150) |>
   dplyr::select(TransectPoint_ID,elevation_m)   # select  only distance_m and elevation 
 elevdat
 
