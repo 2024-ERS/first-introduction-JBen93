@@ -130,3 +130,4 @@ Dat_WarmthIndex |>
   geom_point(size = 2) + 
   # geom_smooth(method = lm) +
   geom_quantile(quantiles = c(0.1, 0.5, 0.9))
+t
