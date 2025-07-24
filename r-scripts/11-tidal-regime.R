@@ -24,3 +24,4 @@ tidedat3<-tidedat2 |> dplyr::filter(Year==2023) |>
 ggplot(aes(x=sealevel,y=transgression_freq))+
   geom_line() +
   labs(x="Sea level (m)",y="Cumulative transgression frequency",color="Year")
+
