@@ -62,8 +62,8 @@ vdat3 |> dplyr::filter(rank<=10) |>
 # load the elevation data from 2017-2023, 
 # select the variables year, distance and elevation_m, 
 # and  add  the elevation_m variable to the vdat3 vegetation data of 2017-2020
-elevdat<-read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT4C7olgh28MHskOjCIQGYlY8v5z1sxza9XaCccwITnjoafF_1Ntfyl1g7ngQt4slnQlseWT6Fk3naB/pub?gid=1550309563&single=true&output=csv") %>%
-  dplyr::select(year,TransectPoint_ID,elevation_m) %>%
+elevdat<-read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT4C7olgh28MHskOjCIQGYlY8v5z1sxza9XaCccwITnjoafF_1Ntfyl1g7ngQt4slnQlseWT6Fk3naB/pub?gid=1550309563&single=true&output=csv") |>
+  dplyr::select(year,TransectPoint_ID,elevation_m) |>
   dplyr::filter(!is.na(TransectPoint_ID))
 elevdat
 # join with the vegetation data
